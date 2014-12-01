@@ -26,7 +26,7 @@
     background: #AFEFFC; 
     color:#FFF; 
 }
-.mb-calendar td.free { 
+.mb-calendar td.available { 
     background: #2ED071; 
     color:#FFF; 
 }
@@ -38,11 +38,7 @@
     background: #6170FF; 
     color:#FFF; 
 }
-.mb-calendar td.selected { 
-    background: #FF8439; 
-    color:#FFF; 
-}
-.mb-calendar td:not(.nil):hover { 
+.mb-calendar td:not(.notmonth):hover { 
     color:#fff; 
     background: #C6C6C6;
 }
@@ -50,7 +46,7 @@
     background: #D9F3FF; 
     color:#333; 
 }
-.mb-calendar td.free:hover { 
+.mb-calendar td.available:hover { 
     background: #5EF0A1; 
     color:#FFF; 
 }
@@ -62,16 +58,20 @@
     background: #91A0FF; 
     color:#FFF; 
 }
+.mb-calendar td.selected { 
+    background: #FF8439; 
+    color:#FFF; 
+}
 .mb-calendar td.selected:hover { 
     background: #FFA479; 
     color:#FFF; 
 }
 .mb-calendar td {
-	position: relative;
+    position: relative;
     transition: all 0.3s;
 }
 .mb-calendar td span {
-	position: absolute;
-	bottom: 60px;
-	left: 65px;
+    position: absolute;
+    top: 5px;
+    right: 15px;
 }
