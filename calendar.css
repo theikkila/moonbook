@@ -35,7 +35,7 @@
     color:#FFF; 
 } 
 .mb-calendar td.booked { 
-    background: #6170FF; 
+    background: #FF8439;
     color:#FFF; 
 }
 .mb-calendar td:not(.notmonth):hover { 
@@ -55,15 +55,15 @@
     color:#FFF; 
 } 
 .mb-calendar td.booked:hover { 
-    background: #91A0FF; 
+    background: #FFA479; 
     color:#FFF; 
 }
 .mb-calendar td.selected { 
-    background: #FF8439; 
+    background: #6170FF; 
     color:#FFF; 
 }
 .mb-calendar td.selected:hover { 
-    background: #FFA479; 
+    background: #91A0FF; 
     color:#FFF; 
 }
 .mb-calendar td {
