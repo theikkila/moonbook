@@ -3,144 +3,58 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Test</title>
-	<style type="text/css">
-	.mb-calendar {
-		margin:50px auto; 
-		font: 13px/1.5 "Helvetica Neue", Helvatica, Arial, san-serif; 
-		display:table; 
-	}
-	.mb-calendar table { 
-    background:#fff; 
-    border-collapse:collapse; 
-} 
-.mb-calendar td { 
-    color:#2b2b2b; 
-    width:90px; 
-    height:90px; 
-    line-height:30px; 
-    text-align:center; 
-    border:1px solid #e6e6e6; 
-    cursor:default;
-    text-transform:uppercase; 
-    font-size:90%; 
-    color:#9e9e9e; 
-} 
-.mb-calendar td:not(:last-child) { 
-    border-right:1px solid #fff; 
-}
-.mb-calendar td.today { 
-    background: #FF8439; 
-    color:#FFF; 
-}
-.mb-calendar td.free { 
-    background: #2ED071; 
-    color:#FFF; 
-}
-.mb-calendar td.na { 
-    background: #FF2E55; 
-    color:#FFF; 
-} 
-.mb-calendar td.booked { 
-    background: #6170FF; 
-    color:#FFF; 
-}
-.mb-calendar td:not(.nil):hover { 
-    color:#fff; 
-    background: #C6C6C6;
-}
-.mb-calendar td.today:hover { 
-    background: #FFC489; 
-    color:#FFF; 
-}
-.mb-calendar td.free:hover { 
-    background: #5EF0A1; 
-    color:#FFF; 
-}
-.mb-calendar td.na:hover { 
-    background: #FF5E85; 
-    color:#FFF; 
-} 
-.mb-calendar td.booked:hover { 
-    background: #91A0FF; 
-    color:#FFF; 
-}
-.mb-calendar td {
-	position: relative;
-    transition: all 0.3s;
-}
-.mb-calendar td span {
-	position: absolute;
-	bottom: 60px;
-	left: 65px;
-}
-	</style>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <link rel="stylesheet" href="calendar.css">
 </head>
-<body>
-	
-
-	<div class="mb-calendar">
-		<div class="mb-header"></div>
-		<table class="mb-days">
-			<thead>
-				<tr>
-					<th>monday</th>
-					<th>tueday</th>
-					<th>wednesday</th>
-					<th>thursday</th>
-					<th>friday</th>
-					<th>saturnday</th>
-					<th>sunday</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td class="mb-notmonth"></td>
-					<td class="mb-notmonth"></td>
-					<td><span>1</span></td>
-					<td><span>2</span></td>
-					<td><span>3</span></td>
-					<td><span>4</span></td>
-					<td><span>5</span></td>
-				</tr>
-				<tr>
-					<td><span>6</span></td>
-					<td><span>7</span></td>
-					<td><span>8</span></td>
-					<td><span>9</span></td>
-					<td><span>10</span></td>
-					<td><span>11</span></td>
-					<td><span>12</span></td>
-				</tr>
-				<tr>
-					<td><span>13</span></td>
-					<td><span>14</span></td>
-					<td class="today">Today<span>15</span></td>
-					<td><span>16</span></td>
-					<td><span>17</span></td>
-					<td><span>18</span></td>
-					<td><span>19</span></td>
-				</tr>
-				<tr>
-					<td><span>20</span></td>
-					<td class="free">Available<span>21</span></td>
-					<td><span>22</span></td>
-					<td><span>23</span></td>
-					<td class="na">Not Available<span>24</span></td>
-					<td><span>25</span></td>
-					<td><span>26</span></td>
-				</tr>
-				<tr>
-					<td><span>27</span></td>
-					<td><span>28</span></td>
-					<td class="booked">Booked<span>29</span></td>
-					<td><span>30</span></td>
-					<td><span>31</span></td>
-					<td class="mb-notmonth"></td>
-					<td class="mb-notmonth"></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+<body ng-app="App" ng-controller="base">
+	{{a}}
+<moonbook-calendar></moonbook-calendar>
 
 </body>
+<script>
+var app = angular.module('App', []);
+
+app.controller('base', function($scope) {
+    $scope.a = "asd";
+});
+
+app.directive('moonbookCalendar', function () {
+  return {
+    restrict: 'AEC',
+    templateUrl: 'calendarTemplate.html',
+    link: function (scope, element, attr) {
+        var multipleMode = false;
+        var selected = [];
+        element.find('td').on('click', function () {
+                console.log(this.dataset['date']);
+            if (!this.dataset['date']) {
+                this.dataset['date'] = new Date();
+            }
+            if (this.dataset['selected'] && this.dataset['selected'] === "true") {
+                // unselect
+                this.classList.remove('selected');
+                this.dataset['selected'] = false;
+                var day = this;
+                _.remove(selected, function(obj) {
+                    return (new Date(obj.day)).getTime() == (new Date(day.dataset['date'])).getTime();
+                });
+            } else {
+                this.classList.add('selected');
+                this.dataset['selected'] = true;
+                if (!multipleMode) {
+                    for (var i = selected.length - 1; i >= 0; i--) {
+                        selected[i].element.dataset['selected'] = false;
+                        selected[i].element.classList.remove('selected');
+                    };
+                    selected = [];
+                }
+                selected.push({day: new Date(this.dataset['date']), element: this});
+            }
+            console.log(selected);
+        });
+    }
+}
+});
+</script>
 </html>
