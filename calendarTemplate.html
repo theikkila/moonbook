@@ -17,7 +17,7 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="week in month">
-					<td ng-repeat="day in week" id="{{day.id}}" ng-click="select($event)" data-date="{{day.date}}" data-notmonth="{{day.notmonth}}" data-url="{{day.url}}" ng-class="{notmonth: day.notmonth, booked: day.booked, available: day.available, na: day.na}">{{day.title}}<span>{{day.dayOfMonth}}</span></td>
+					<td ng-repeat="day in week" id="{{day.id}}" ng-mousedown="mousedown($event)" ng-mouseover="mouseover($event)" data-date="{{day.date}}" data-notmonth="{{day.notmonth}}" data-url="{{day.url}}" ng-class="{notmonth: day.notmonth, booked: day.booked, available: day.available, na: day.na}">{{day.title}}<span>{{day.dayOfMonth}}</span></td>
 				</tr>
 			</tbody>
 		</table>

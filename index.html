@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="calendar.css">
 </head>
 <body ng-app="App" ng-controller="base">
-    <input type="checkbox" ng-model="multi">
+    <input type="checkbox" ng-model="multi" />
     <div ng-repeat="selection in arr">
         {{selection}} <button ng-click="rm($index)">poista</button>
     </div>
@@ -56,8 +56,11 @@ app.directive('moonbookCalendar', function ($parse) {
 
     link: function (scope, element, attr) {
         // SetUP
-        var multipleMode = scope.multiple;
         scope.month = [];
+        var isMouseDown = false;
+        element.on('mouseup', function(){
+            isMouseDown = false;
+        });
         var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
         var days_lib = {};
@@ -122,11 +125,9 @@ app.directive('moonbookCalendar', function ($parse) {
                 (function(day){
                     var dt = new Date(scope.days[i].date*1000);
                     var date = dateT(dt);
-                    console.log(date);
                     days_lib[date] = {price: scope.days[i].price, booked: scope.days[i].booked, bookable: scope.days[i].bookable};    
                 })(scope.days[i]);
             };
-            console.log(days_lib);
             buildMonth(parseInt(scope.year), parseInt(scope.imonth));
         });
         scope.$watch('imonth', function(){
@@ -138,6 +139,7 @@ app.directive('moonbookCalendar', function ($parse) {
             buildMonth(parseInt(scope.year), parseInt(scope.imonth));
         });
         scope.$watch('multiple', function(){
+            scope.selected = [];
             buildMonth(parseInt(scope.year), parseInt(scope.imonth));
         });
         // Watch for selected
@@ -153,26 +155,39 @@ app.directive('moonbookCalendar', function ($parse) {
                 el.dataset['selected'] = true;
             };
         }, true);
+        scope.mousedown = function ($event) {
+
+            isMouseDown = true;
+            $event.preventDefault();
+            scope.select($event);
+        }
+        scope.mouseover = function ($event) {
+            if (isMouseDown) {
+                scope.select($event);
+            }
+        }
         // onClick event handler
         scope.select = function ($event) {
-            if ($event.currentTarget.dataset['notmonth'] === "true") { return; };
-            if (scope.readOnly && $event.currentTarget.dataset['url'] !== '') {
-                window.location = $event.currentTarget.dataset['url'];
+            //console.log($event.currentTarget, $event.target);
+            var trg = $event.currentTarget;
+            if (trg.dataset['notmonth'] === "true") { return; };
+            if (scope.readOnly && trg.dataset['url'] !== '') {
+                window.location = trg.dataset['url'];
             }
             if (scope.readOnly) {
                 return;
             };
-            if ($event.currentTarget.dataset['selected'] && $event.currentTarget.dataset['selected'] === "true") {
+            if (trg.dataset['selected'] && trg.dataset['selected'] === "true") {
                 // unselect
-                var day = $event.currentTarget;
+                var day = trg;
                 _.remove(scope.selected, function(obj) {
                     return (new Date(obj.day)).getTime() == (new Date(day.dataset['date'].replace(/\"/g, ''))).getTime();
                 });
             } else {
-                $event.currentTarget.classList.add('selected');
-                $event.currentTarget.dataset['selected'] = true;
-                var that = $event.currentTarget;
-                if (!multipleMode) {
+                trg.classList.add('selected');
+                trg.dataset['selected'] = true;
+                var that = trg;
+                if (!scope.multiple) {
                     for (var i = scope.selected.length - 1; i >= 0; i--) {
                         el = document.getElementById(scope.selected[i].element);
                         el.dataset['selected'] = false;
