@@ -1,0 +1,26 @@
+{
+  "name": "moonbook-calendar",
+  "version": "0.0.0",
+  "homepage": "https://github.com/theikkila/moonbook",
+  "authors": [
+    "Teemu Heikkilä <teemu.heikkila@pistoke.org>"
+  ],
+  "description": "Calendar directive for Angular.js",
+  "main": "calendar.js",
+  "keywords": [
+    "Calendar",
+    "angular"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "lodash": "~2.4.1",
+    "angular": "~1.3.5"
+  }
+}
