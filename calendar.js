@@ -23,7 +23,7 @@ angular.module('moonbook.calendar',  []).directive('moonbookCalendar', function 
 
         var days_lib = {};
         function dateT(dt) {
-            return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + (dt.getDate()-1);
+            return dt.getUTCFullYear() + '-' + (dt.getUTCMonth() + 1) + '-' + (dt.getUTCDate());
         }
         function generateUUID(){
             var d = new Date().getTime();
@@ -38,7 +38,7 @@ angular.module('moonbook.calendar',  []).directive('moonbookCalendar', function 
             // month_number is in the range 1..12
             var firstOfMonth = new Date(year, month_number-1, 1);
             var lastOfMonth = new Date(year, month_number, 0);
-            var used = firstOfMonth.getDay() + lastOfMonth.getDate() -1;
+            var used = firstOfMonth.getDay() + lastOfMonth.getDate();
             return Math.ceil( used / 7);
         }
         function buildMonth(year, month_number) {
@@ -53,7 +53,7 @@ angular.module('moonbook.calendar',  []).directive('moonbookCalendar', function 
                         scope.month[i][c] = {notmonth: true, id: generateUUID()};
                     } else {
                         d++;
-                        var dt = new Date(year, month_number-1, d+1)
+                        var dt = new Date(year, month_number-1, d)
                         var dt_text = dateT(dt);
                         scope.month[i][c] = {notmonth: false, dayOfMonth: d, date: dt, id: generateUUID()};
                         var dobj = days_lib[dt_text];
@@ -70,7 +70,7 @@ angular.module('moonbook.calendar',  []).directive('moonbookCalendar', function 
                             scope.month[i][c].available = false;
                             scope.month[i][c].na = false;
                             scope.month[i][c].title = "Booked";
-
+                            scope.month[i][c].misc = dobj;
                         };
                         scope.month[i][c].available = !scope.month[i][c].na;
 
@@ -78,12 +78,27 @@ angular.module('moonbook.calendar',  []).directive('moonbookCalendar', function 
                 };
             };
         } 
+        scope.$watch('baseprice', function() {
+            buildMonth(parseInt(scope.year), parseInt(scope.imonth));
+        });
         scope.$watch('days', function () {
+            days_lib = {};
             for (var i = scope.days.length - 1; i >= 0; i--) {
                 (function(day){
                     var dt = new Date(scope.days[i].date*1000);
                     var date = dateT(dt);
-                    days_lib[date] = {price: scope.days[i].price, booked: scope.days[i].booked, bookable: scope.days[i].bookable};    
+                    if (days_lib[date]) {
+                        if ('order' in scope.days[i]) {
+                            days_lib[date].booked = scope.days[i].booked
+                            days_lib[date].order = scope.days[i].order
+                            days_lib[date].deal_id = scope.days[i].id
+                            days_lib[date].booker_id = scope.days[i].booker_id
+                            days_lib[date].artist_id = scope.days[i].artist_id
+                            days_lib[date].status = scope.days[i].status
+                        }
+                    } else {
+                        days_lib[date] = {price: scope.days[i].price, order: scope.days[i].order, deal_id: scope.days[i].id, booker_id: scope.days[i].booker_id, artist_id: scope.days[i].artist_id, status: scope.days[i].status, booked: scope.days[i].booked, bookable: scope.days[i].bookable};    
+                    }
                 })(scope.days[i]);
             };
             buildMonth(parseInt(scope.year), parseInt(scope.imonth));
