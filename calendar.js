@@ -1,4 +1,4 @@
-angular.module('moonbook.calendat',  []).directive('moonbookCalendar', function ($parse) {
+angular.module('moonbook.calendar',  []).directive('moonbookCalendar', function ($parse) {
   return {
     restrict: 'AEC',
     templateUrl: 'calendarTemplate.html',
