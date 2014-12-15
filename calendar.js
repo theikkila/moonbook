@@ -3,11 +3,11 @@ angular.module('moonbook.calendar',  []).directive('moonbookCalendar', function 
     restrict: 'AEC',
     templateUrl: 'calendarTemplate.html',
     scope: {
-        multiple: '=',
+        multiple: '&',
         selected: '=',
         imonth: '=month',
         year: '=',
-        readOnly: '=',
+        readOnly: '&',
         baseprice: '=',
         days: '='
     },
