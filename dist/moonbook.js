@@ -1,15 +1,15 @@
-angular.module('moonbook.calendar',  []).directive('moonbookCalendar', function ($parse) {
+angular.module('moonbook.calendar', []).directive('moonbookCalendar', function () {
   return {
     restrict: 'AEC',
-    templateUrl: 'calendarTemplate.html',
+    templateUrl: 'src/moonbookCalendarTemplate.html',
     scope: {
-        multiple: '=',
-        selected: '=',
-        imonth: '=month',
-        year: '=',
-        readOnly: '=',
-        baseprice: '=',
-        days: '='
+        multiple: '=?',
+        selected: '=?',
+        imonth: '=?month',
+        year: '=?',
+        readOnly: '=?',
+        baseprice: '=?',
+        days: '=?'
     },
 
     link: function (scope, element, attr) {
@@ -79,11 +79,13 @@ angular.module('moonbook.calendar',  []).directive('moonbookCalendar', function 
             };
         } 
         scope.$watch('days', function () {
-            for (var i = scope.days.length - 1; i >= 0; i--) {
+            //if (!scope.days) {return;};
+            console.log(scope.days)
+            for (var i = (scope.days ? scope.days.length : 0) - 1; i >= 0; i--) {
                 (function(day){
-                    var dt = new Date(scope.days[i].date*1000);
+                    var dt = new Date(day.date*1000);
                     var date = dateT(dt);
-                    days_lib[date] = {price: scope.days[i].price, booked: scope.days[i].booked, bookable: scope.days[i].bookable};    
+                    days_lib[date] = {price: day.price, booked: day.booked, bookable: day.bookable};    
                 })(scope.days[i]);
             };
             buildMonth(parseInt(scope.year), parseInt(scope.imonth));
@@ -159,3 +161,34 @@ angular.module('moonbook.calendar',  []).directive('moonbookCalendar', function 
     }
 }
 });
+;angular.module('moonbook.calendar').run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('src/moonbookCalendarTemplate.html',
+    "\n" +
+    "\t<div class=\"mb-calendar\">\n" +
+    "\t\t<div class=\"mb-header\">\n" +
+    "\t\t\t<h3>{{monthName}}</h3>\n" +
+    "\t\t</div>\n" +
+    "\t\t<table class=\"mb-days\">\n" +
+    "\t\t\t<thead>\n" +
+    "\t\t\t\t<tr>\n" +
+    "\t\t\t\t\t<th>monday</th>\n" +
+    "\t\t\t\t\t<th>tueday</th>\n" +
+    "\t\t\t\t\t<th>wednesday</th>\n" +
+    "\t\t\t\t\t<th>thursday</th>\n" +
+    "\t\t\t\t\t<th>friday</th>\n" +
+    "\t\t\t\t\t<th>saturnday</th>\n" +
+    "\t\t\t\t\t<th>sunday</th>\n" +
+    "\t\t\t\t</tr>\n" +
+    "\t\t\t</thead>\n" +
+    "\t\t\t<tbody>\n" +
+    "\t\t\t\t<tr ng-repeat=\"week in month\">\n" +
+    "\t\t\t\t\t<td ng-repeat=\"day in week\" id=\"{{day.id}}\" ng-mousedown=\"mousedown($event)\" ng-mouseover=\"mouseover($event)\" data-date=\"{{day.date}}\" data-notmonth=\"{{day.notmonth}}\" data-url=\"{{day.url}}\" ng-class=\"{notmonth: day.notmonth, booked: day.booked, available: day.available, na: day.na}\">{{day.title}}<span>{{day.dayOfMonth}}</span></td>\n" +
+    "\t\t\t\t</tr>\n" +
+    "\t\t\t</tbody>\n" +
+    "\t\t</table>\n" +
+    "\t</div>"
+  );
+
+}]);

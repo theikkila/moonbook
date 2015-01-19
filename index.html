@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Test</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+    <title>Test</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
-    <script type="text/javascript" src="calendar.js"></script>
-    <link rel="stylesheet" href="calendar.css">
+    <link rel="stylesheet" href="dist/moonbook.min.css">
     
 </head>
-<body ng-app="App" ng-controller="base">
+<body ng-app="ngAppDemo" ng-strict-di>
+<div ng-controller="base">
     <input type="checkbox" ng-model="multi" />
     <div ng-repeat="selection in arr">
         {{selection}} <button ng-click="rm($index)">poista</button>
@@ -18,12 +18,13 @@
     <!--<div ng-repeat="i in [1,2,3,4,5,6,7,8,9,10,11,12]"> -->
         <moonbook-calendar multiple="multi" read-only="false" baseprice="300" days="days" selected="arr" month="08" year="year"></moonbook-calendar>
     <!--</div>-->
-
+</div>
 
 </body>
+    <script type="text/javascript" src="dist/moonbook.min.js"></script>
 <script>
-var app = angular.module('App', ['moonbook.calendar']);
-app.controller('base', function($scope) {
+angular.module('ngAppDemo', ['moonbook.calendar'])
+.controller('base', ["$scope", function($scope) {
     $scope.arr = [];
     $scope.month = 08;
     $scope.year = 2014;
@@ -38,7 +39,7 @@ app.controller('base', function($scope) {
     $scope.rm = function(index) {
         $scope.arr.splice(index, 1);
     }
-});
+}]);
 
 </script>
 </html>

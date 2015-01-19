@@ -6,7 +6,7 @@
     "Teemu Heikkilä <teemu.heikkila@pistoke.org>"
   ],
   "description": "Calendar directive for Angular.js",
-  "main": "calendar.js",
+  "main": ["dist/moonbook.min.js", "dist/moonbook.min.css"],
   "keywords": [
     "Calendar",
     "angular"
