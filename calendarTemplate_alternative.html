@@ -1,0 +1,29 @@
+
+<div class="mb-calendar">
+    <div class="mb-header">
+        <h3>{{monthName}}</h3>
+    </div>
+    <table class="mb-days">
+        <thead>
+            <tr>
+                <th>monday</th>
+                <th>tueday</th>
+                <th>wednesday</th>
+                <th>thursday</th>
+                <th>friday</th>
+                <th>saturnday</th>
+                <th>sunday</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="week in month">
+                <td ng-repeat="day in week" id="{{day.id}}" ng-mousedown="mousedown($event)" ng-mouseover="mouseover($event)" data-date="{{day.date}}" data-notmonth="{{day.notmonth}}" data-url="{{day.url}}" ng-class="{notmonth: day.notmonth, booked: day.booked, available: day.available, na: day.na}">
+                    {{day.title}}
+                    <br ng-if="day.booked">
+                    <a class="btn btn-xs btn-primary" ng-if="day.booked" href="#/artists/{{day.misc.artist_id}}/deals/{{day.misc.deal_id}}">Deal</a>
+                    <span>{{day.dayOfMonth}}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
